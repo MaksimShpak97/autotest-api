@@ -1,5 +1,6 @@
 from api_client_get_user import public_user_client
 from clients.courses.courses_client import get_courses_client, CreateCourseRequestDict
+from clients.exercises.exercises_client import get_exercise_client, CreateExercisesRequestDict
 from clients.files.files_client import get_files_client, CreateFileRequestDict
 from clients.private_http_builder import AuthenticationUserDict
 from clients.users.public_users_client import get_public_users_client, CreateUserRequestDict
@@ -20,6 +21,7 @@ authentication_user = AuthenticationUserDict(
     email=create_user_request['email'],
     password=create_user_request['password'],
 )
+exercise_client = get_exercise_client(authentication_user)
 files_client = get_files_client(authentication_user)
 courses_client = get_courses_client(authentication_user)
 
@@ -43,3 +45,15 @@ create_course_request = CreateCourseRequestDict(
 )
 create_course_response = courses_client.create_course(create_course_request)
 print('Create course data:', create_course_response)
+
+exercise_request = CreateExercisesRequestDict(
+    title="Python API exercise",
+    courseId=create_course_response['course']['id'],
+    maxScore=90,
+    minScore=12,
+    orderIndex=1,
+    description="Python API description",
+    estimatedTime="2 mouth",
+)
+exercise_response = exercise_client.create_exercise(exercise_request)
+print('Create exercise data: ', exercise_response)
